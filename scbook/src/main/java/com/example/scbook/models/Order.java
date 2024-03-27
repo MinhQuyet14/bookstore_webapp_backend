@@ -30,7 +30,7 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
     @Column(name = "status")
-    private Status status;
+    private String status;
     @Column(name = "total_money")
     private Integer totalMoney;
     @Column(name = "shipping_method")
