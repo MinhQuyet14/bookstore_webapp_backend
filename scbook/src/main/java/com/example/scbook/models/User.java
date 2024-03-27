@@ -6,30 +6,34 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "books")
+@Table(name = "users")
+@Data
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 350)
-    private String name;
-    private Float price;
-    private String url;
-    private String description;
-
-
+    @Column(name = "fullname", length = 100)
+    private String fullName;
+    @Column(name = "phone_number", length = 10, nullable = false)
+    private String phoneNumber;
+    @Column(length = 200)
+    private String address;
+    @Column(length = 200)
+    private String password;
+    @Column(name = "is_active")
+    private boolean isActive;
+    @Column(name = "facebook_account_id")
+    private int facebookAccountId;
+    @Column(name = "google_account_id")
+    private int googleAccountId;
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
