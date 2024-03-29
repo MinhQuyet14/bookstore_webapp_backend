@@ -14,7 +14,7 @@ public class BookDTO {
     private String url;
     private String description;
     @JsonProperty("category_id")
-    private String categoryId;
+    private Long categoryId;
     @JsonProperty("author_id")
-    private String authorId;
+    private Long authorId;
 }
