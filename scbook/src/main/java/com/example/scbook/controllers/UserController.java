@@ -16,10 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/users")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class UserController {
 
     private final IUserService userService;
+    UserController(IUserService userService){
+        this.userService = userService;
+    }
     @PostMapping("/register")
     public ResponseEntity<?> createUser(
             @Valid @RequestBody UserDTO userDTO,

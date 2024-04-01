@@ -50,16 +50,30 @@ public class ProductController {
                 .build());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<String> getProductById(@PathVariable("id") String productId){
-        return ResponseEntity.ok("Product with id: "+productId);
+    public ResponseEntity<?> getProductById(@PathVariable("id") Long productId){
+        try {
+            Product existingProduct = productService.getProductById(productId);
+            return ResponseEntity.ok(ProductResponse.fromProduct(existingProduct));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok("Deleted successfully");
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createProduct(
             @Valid @RequestBody ProductDTO productDTO,
             @RequestPart("file")MultipartFile file,
             BindingResult result
-            ){
+    ){
         try {
             if(result.hasErrors()){
                 List<String> errorMessages = result.getFieldErrors()
@@ -90,12 +104,6 @@ public class ProductController {
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
-        productService.deleteProduct(id);
-        return ResponseEntity.ok("Deleted product successfully");
     }
     public String storeFile(MultipartFile file) throws IOException{
         String filename = StringUtils.cleanPath(file.getOriginalFilename());

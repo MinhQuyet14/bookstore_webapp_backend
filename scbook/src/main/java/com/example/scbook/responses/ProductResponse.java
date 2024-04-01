@@ -1,5 +1,6 @@
 package com.example.scbook.responses;
 
+import com.example.scbook.models.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -18,8 +19,23 @@ public class ProductResponse {
     private String description;
     @JsonProperty("category_id")
     private Long categoryId;
+    @JsonProperty("author_id")
+    private Long authorId;
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+
+    public static ProductResponse fromProduct(Product product){
+        return ProductResponse.builder()
+                .name(product.getName())
+                .price(product.getPrice())
+                .url(product.getUrl())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .description(product.getDescription())
+                .authorId(product.getAuthor().getId())
+                .categoryId(product.getCategory().getId())
+                .build();
+    }
 }
