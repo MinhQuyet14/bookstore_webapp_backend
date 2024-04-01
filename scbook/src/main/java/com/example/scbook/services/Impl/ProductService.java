@@ -8,6 +8,7 @@ import com.example.scbook.models.Category;
 import com.example.scbook.repositories.AuthorRepository;
 import com.example.scbook.repositories.ProductRepository;
 import com.example.scbook.repositories.CategoryRepository;
+import com.example.scbook.responses.ProductResponse;
 import com.example.scbook.services.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,8 +49,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAllProducts(PageRequest pageRequest) {
-        return productRepository.findAll(pageRequest);
+    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
+        return productRepository.findAll(pageRequest).map(product -> ProductResponse.builder()
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .url(product.getUrl())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
+                    .description(product.getDescription())
+                    .categoryId(product.getCategory().getId())
+                    .build()
+        );
     }
 
     @Override

@@ -1,7 +1,15 @@
 package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.ProductDTO;
+import com.example.scbook.models.Product;
+import com.example.scbook.responses.ProductListResponse;
+import com.example.scbook.responses.ProductResponse;
+import com.example.scbook.services.IProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +29,25 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/products")
+@RequiredArgsConstructor
 public class ProductController {
+    //DI
+    private final IProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<String> getAllProducts(
+    public ResponseEntity<ProductListResponse> getAllProducts(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        return ResponseEntity.ok("Get products here!!!");
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdAt").descending());
+        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> products = productPage.getContent();
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(products)
+                .totalPages(totalPages)
+                .build());
     }
     @GetMapping("/{id}")
     public ResponseEntity<String> getProductById(@PathVariable("id") String productId){
@@ -64,14 +83,20 @@ public class ProductController {
                             .body("File must be an image");
                 }
                 String filename = storeFile(file);
-                //bookDTO.setUrl();
+                productDTO.setUrl(filename);
             }
+            productService.createProduct(productDTO);
             return ResponseEntity.ok("Product created successfully!!!");
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Deleted product successfully");
+    }
     public String storeFile(MultipartFile file) throws IOException{
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String uniqueFileName = UUID.randomUUID().toString() + "_" + filename;
