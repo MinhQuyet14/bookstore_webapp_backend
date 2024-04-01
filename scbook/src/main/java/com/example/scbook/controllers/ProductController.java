@@ -1,6 +1,6 @@
 package com.example.scbook.controllers;
 
-import com.example.scbook.dtos.BookDTO;
+import com.example.scbook.dtos.ProductDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/products")
-public class BookController {
+public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<String> getAllProducts(
@@ -38,7 +37,7 @@ public class BookController {
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createProduct(
-            @Valid @RequestBody BookDTO bookDTO,
+            @Valid @RequestBody ProductDTO productDTO,
             @RequestPart("file")MultipartFile file,
             BindingResult result
             ){

@@ -20,8 +20,8 @@ public class OrderDetail {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private Float price;
 

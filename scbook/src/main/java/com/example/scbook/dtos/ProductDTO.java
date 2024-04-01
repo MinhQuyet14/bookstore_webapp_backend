@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDTO {
+public class ProductDTO {
     private String name;
     private Float price;
     private String url;
