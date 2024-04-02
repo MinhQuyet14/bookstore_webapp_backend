@@ -1,7 +1,10 @@
 package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.OrderDTO;
+import com.example.scbook.responses.OrderResponse;
+import com.example.scbook.services.IOrderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -11,7 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/orders")
+@RequiredArgsConstructor
 public class OrderController {
+    private final IOrderService orderService;
 
     @PostMapping("")
     public ResponseEntity<?> createOrder(
@@ -26,7 +31,8 @@ public class OrderController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages.toString());
             }
-            return ResponseEntity.ok("Created Order successfully!!!");
+            OrderResponse orderResponse = orderService.createOrder(orderDTO);
+            return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

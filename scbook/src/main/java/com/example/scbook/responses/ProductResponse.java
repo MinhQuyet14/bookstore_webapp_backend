@@ -19,8 +19,7 @@ public class ProductResponse {
     private String description;
     @JsonProperty("category_id")
     private Long categoryId;
-    @JsonProperty("author_id")
-    private Long authorId;
+    private String author;
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
     @JsonProperty("updated_at")
@@ -34,7 +33,7 @@ public class ProductResponse {
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .description(product.getDescription())
-                .authorId(product.getAuthor().getId())
+                .author(product.getAuthor())
                 .categoryId(product.getCategory().getId())
                 .build();
     }

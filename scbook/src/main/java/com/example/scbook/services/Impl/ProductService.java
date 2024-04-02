@@ -2,10 +2,8 @@ package com.example.scbook.services.Impl;
 
 import com.example.scbook.dtos.ProductDTO;
 import com.example.scbook.exceptions.DataNotFoundException;
-import com.example.scbook.models.Author;
 import com.example.scbook.models.Product;
 import com.example.scbook.models.Category;
-import com.example.scbook.repositories.AuthorRepository;
 import com.example.scbook.repositories.ProductRepository;
 import com.example.scbook.repositories.CategoryRepository;
 import com.example.scbook.responses.ProductResponse;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final AuthorRepository authorRepository;
 
     @Override
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
@@ -28,16 +25,13 @@ public class ProductService implements IProductService {
                 .orElseThrow(
                         ()-> new DataNotFoundException(
                                 "Cannot find category with id: "+ productDTO.getCategoryId()));
-        Author existingAuthor = authorRepository.findById(productDTO.getAuthorId())
-                .orElseThrow(
-                        ()-> new DataNotFoundException(
-                                "Cannot find author with id: "+ productDTO.getAuthorId()));
+
         Product newProduct = Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
                 .url(productDTO.getUrl())
                 .category(existingCategory)
-                .author(existingAuthor)
+                .author(productDTO.getAuthor())
                 .build();
         return productRepository.save(newProduct);
     }
@@ -62,12 +56,9 @@ public class ProductService implements IProductService {
                     .orElseThrow(
                             ()-> new DataNotFoundException(
                                     "Cannot find category with id: "+ productDTO.getCategoryId()));
-            Author existingAuthor = authorRepository.findById(productDTO.getAuthorId())
-                    .orElseThrow(
-                            ()-> new DataNotFoundException(
-                                    "Cannot find author with id: "+ productDTO.getAuthorId()));
+
             existingProduct.setCategory(existingCategory);
-            existingProduct.setAuthor(existingAuthor);
+            existingProduct.setAuthor(productDTO.getAuthor());
             existingProduct.setPrice(productDTO.getPrice());
             existingProduct.setDescription(productDTO.getDescription());
             existingProduct.setUrl(productDTO.getUrl());

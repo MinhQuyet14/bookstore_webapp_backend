@@ -15,6 +15,5 @@ public class ProductDTO {
     private String description;
     @JsonProperty("category_id")
     private Long categoryId;
-    @JsonProperty("author_id")
-    private Long authorId;
+    private String author;
 }
