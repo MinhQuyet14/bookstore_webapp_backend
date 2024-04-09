@@ -28,5 +28,5 @@ public class OrderDetail {
     @Column(name = "number_of_products")
     private int numberOfProducts;
     @Column(name = "total_money")
-    private Integer totalMoney;
+    private Float totalMoney;
 }
