@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "fullname", length = 100)
     private String fullName;
-    @Column(name = "phone_number", length = 10, nullable = false)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
     @Column(length = 200)
     private String address;
@@ -59,7 +59,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName().toUpperCase()));
         return authorities;
     }
 
