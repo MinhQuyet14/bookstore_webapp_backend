@@ -2,6 +2,7 @@ package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.UserDTO;
 import com.example.scbook.dtos.UserLoginDTO;
+import com.example.scbook.models.User;
 import com.example.scbook.services.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class UserController {
             if (!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Password does not match");
             }
-            userService.createUser(userDTO);
-            return ResponseEntity.ok("Register successfully");
+            User user = userService.createUser(userDTO);
+            return ResponseEntity.ok(user);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
