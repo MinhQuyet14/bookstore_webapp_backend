@@ -3,6 +3,8 @@ package com.example.scbook.controllers;
 import com.example.scbook.dtos.UserDTO;
 import com.example.scbook.dtos.UserLoginDTO;
 import com.example.scbook.models.User;
+import com.example.scbook.responses.LoginResponse;
+import com.example.scbook.responses.RegisterResponse;
 import com.example.scbook.services.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(
+    public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result
     ){
@@ -34,25 +36,39 @@ public class UserController {
                         .stream()
                         .map(FieldError::getDefaultMessage)
                         .toList();
-                return ResponseEntity.badRequest().body(errorMessages.toString());
+                return ResponseEntity.badRequest().body(RegisterResponse.builder()
+                                .message("Dang ky khong thanh cong")
+                        .build());
             }
             if (!userDTO.getPassword().equals(userDTO.getRetypePassword())){
-                return ResponseEntity.badRequest().body("Password does not match");
+                return ResponseEntity.badRequest().body(RegisterResponse.builder()
+                                .message("Mat khau khong trung khop")
+                        .build());
             }
             User user = userService.createUser(userDTO);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(RegisterResponse.builder()
+                            .message("Dang ky thanh cong!!!")
+                            .user(user)
+                    .build());
         } catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RegisterResponse.builder()
+                            .message(e.getMessage())
+                    .build());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         try {
             String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(LoginResponse.builder()
+                            .message("Dang nhap thanh cong!!!")
+                            .token(token)
+                    .build());
         } catch (Exception e) {
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponse.builder()
+                             .message(e.getMessage())
+                     .build());
         }
     }
 }
