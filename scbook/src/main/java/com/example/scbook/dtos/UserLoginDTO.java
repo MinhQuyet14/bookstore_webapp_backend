@@ -13,4 +13,6 @@ public class UserLoginDTO {
     @JsonProperty("phone_number")
     private String phoneNumber;
     private String password;
+    @JsonProperty("role_id")
+    private Long roleId;
 }
