@@ -11,6 +11,7 @@ import com.example.scbook.repositories.ProductRepository;
 import com.example.scbook.services.IOrderDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,6 +64,7 @@ public class OrderDetailService implements IOrderDetailService {
         return orderDetailRepository.save(existingOrderDetail);
     }
     @Override
+    @Transactional
     public void deleteOrderDetail(Long id) {
         orderDetailRepository.deleteById(id);
     }

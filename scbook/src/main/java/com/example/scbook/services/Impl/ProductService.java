@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
@@ -43,8 +45,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
-        return productRepository.findAll(pageRequest).map(product -> ProductResponse.fromProduct(product));
+    public Page<ProductResponse> getAllProducts(String keyword, Long categoryId, PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
     }
 
     @Override
@@ -76,4 +80,10 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+
+    @Override
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findProductsByIds(productIds);
+    }
+
 }
