@@ -1,11 +1,12 @@
 package com.example.scbook.services.Impl;
 
+import com.example.scbook.dtos.CartItemDTO;
 import com.example.scbook.dtos.OrderDTO;
 import com.example.scbook.exceptions.DataNotFoundException;
-import com.example.scbook.models.Order;
-import com.example.scbook.models.Status;
-import com.example.scbook.models.User;
+import com.example.scbook.models.*;
+import com.example.scbook.repositories.OrderDetailRepository;
 import com.example.scbook.repositories.OrderRepository;
+import com.example.scbook.repositories.ProductRepository;
 import com.example.scbook.repositories.UserRepository;
 import com.example.scbook.services.IOrderService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +25,8 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
     @Override
     public Order createOrder(OrderDTO orderDTO) throws Exception {
         User user = userRepository.findById(orderDTO.getUserId())
@@ -34,12 +39,31 @@ public class OrderService implements IOrderService {
         order.setOrderDate(new Date());
         order.setStatus(Status.PENDING);
         //check shipping date >= now
-        Date shippingDate = orderDTO.getShippingDate() == null ? new Date() : orderDTO.getShippingDate();
-        if (shippingDate.before(new Date())){
+        LocalDate shippingDate = orderDTO.getShippingDate() == null ? LocalDate.now() : orderDTO.getShippingDate();
+        if (shippingDate.isBefore(LocalDate.now())){
             throw new DataNotFoundException("Date must be at least now !");
         }
+        order.setShippingDate(shippingDate);
         order.setActive(true);
+        order.setTotalMoney(orderDTO.getTotalMoney());
         orderRepository.save(order);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for(CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+
+            Long productId = cartItemDTO.getProductId();
+            int quantity = cartItemDTO.getQuantity();
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(()-> new DataNotFoundException("Product not found with id: " + productId));
+
+            orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(quantity);
+            orderDetail.setPrice(product.getPrice());
+            orderDetails.add(orderDetail);
+        }
+        orderDetailRepository.saveAll(orderDetails);
         return order;
     }
 
