@@ -1,11 +1,15 @@
 package com.example.scbook.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -44,7 +48,9 @@ public class Order {
     private String trackingNumber;
     @Column(name = "payment_method")
     private String paymentMethod;
-
     @Column(name = "active")
     private boolean active;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetail> orderDetails;
 }

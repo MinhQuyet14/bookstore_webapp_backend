@@ -20,7 +20,6 @@ public class OrderDTO {
     private Long userId;
     @JsonProperty("fullname")
     private String fullName;
-
     private String email;
     @NotBlank(message = "Phone number is required")
     @JsonProperty("phone_number")
@@ -30,7 +29,6 @@ public class OrderDTO {
     @Min(value = 0, message = "Total money must be >= 0")
     @JsonProperty("total_money")
     private Float totalMoney;
-
     @JsonProperty("shipping_method")
     private String shippingMethod;
     @JsonProperty("shipping_address")
