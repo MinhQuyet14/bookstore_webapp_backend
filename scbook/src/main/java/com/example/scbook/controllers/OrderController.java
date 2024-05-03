@@ -2,6 +2,7 @@ package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.OrderDTO;
 import com.example.scbook.models.Order;
+import com.example.scbook.responses.OrderResponse;
 import com.example.scbook.services.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,8 @@ public class OrderController {
     public ResponseEntity<?> getOrder(@Valid @PathVariable("id") Long orderId){
         try {
             Order existingOrder = orderService.getOrder(orderId);
-            return ResponseEntity.ok(existingOrder);
+            OrderResponse orderResponse = OrderResponse.fromOrder(existingOrder);
+            return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

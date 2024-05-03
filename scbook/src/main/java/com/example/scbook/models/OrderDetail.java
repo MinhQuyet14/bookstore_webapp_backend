@@ -1,6 +1,7 @@
 package com.example.scbook.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +25,9 @@ public class OrderDetail {
     private Product product;
     private Float price;
     @Column(name = "number_of_products")
+    @JsonProperty("number_of_products")
     private int numberOfProducts;
     @Column(name = "total_money")
+    @JsonProperty("total_money")
     private Float totalMoney;
 }
