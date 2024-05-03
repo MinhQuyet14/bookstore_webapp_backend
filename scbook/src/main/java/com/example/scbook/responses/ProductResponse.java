@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ProductResponse {
+    private Long id;
     private String name;
     private Float price;
     private String url;
@@ -27,6 +28,7 @@ public class ProductResponse {
 
     public static ProductResponse fromProduct(Product product){
         return ProductResponse.builder()
+                .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .url(product.getUrl())
