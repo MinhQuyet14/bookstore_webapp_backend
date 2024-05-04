@@ -5,6 +5,7 @@ import com.example.scbook.dtos.UserLoginDTO;
 import com.example.scbook.models.User;
 import com.example.scbook.responses.LoginResponse;
 import com.example.scbook.responses.RegisterResponse;
+import com.example.scbook.responses.UserResponse;
 import com.example.scbook.services.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +74,16 @@ public class UserController {
              return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginResponse.builder()
                              .message(e.getMessage())
                      .build());
+        }
+    }
+    @PostMapping("/details")
+    public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String token) {
+        try{
+            String extractedToken = token.substring(7); //Loai bo "Bearer " tu token
+            User user = userService.getUserDetailsFromToken(extractedToken);
+            return ResponseEntity.ok(UserResponse.fromUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }
