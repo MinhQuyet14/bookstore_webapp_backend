@@ -1,5 +1,6 @@
 package com.example.scbook.controllers;
 
+import com.example.scbook.dtos.UpdateUserDTO;
 import com.example.scbook.dtos.UserDTO;
 import com.example.scbook.dtos.UserLoginDTO;
 import com.example.scbook.models.User;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -77,13 +79,32 @@ public class UserController {
         }
     }
     @PostMapping("/details")
-    public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         try{
-            String extractedToken = token.substring(7); //Loai bo "Bearer " tu token
+            String extractedToken = authorizationHeader.substring(7); //Loai bo "Bearer " tu token
             User user = userService.getUserDetailsFromToken(extractedToken);
             return ResponseEntity.ok(UserResponse.fromUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
+    @PutMapping("/details/{userId}")
+    public ResponseEntity<UserResponse> updateUserDetails(
+            @PathVariable Long userId,
+            @RequestBody UpdateUserDTO updatedUserDTO,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        try{
+            String extractedToken = authorizationHeader.substring(7); //Loai bo "Bearer " tu token
+            User user = userService.getUserDetailsFromToken(extractedToken);
+            if(user.getId().equals(userId)){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            User updatedUser = userService.updateUser(userId, updatedUserDTO);
+            return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
