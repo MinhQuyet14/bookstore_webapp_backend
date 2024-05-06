@@ -97,7 +97,7 @@ public class UserController {
         try{
             String extractedToken = authorizationHeader.substring(7); //Loai bo "Bearer " tu token
             User user = userService.getUserDetailsFromToken(extractedToken);
-            if(user.getId().equals(userId)){
+            if(!user.getId().equals(userId)){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             User updatedUser = userService.updateUser(userId, updatedUserDTO);
