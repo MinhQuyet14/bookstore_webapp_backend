@@ -2,11 +2,17 @@ package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.OrderDTO;
 import com.example.scbook.models.Order;
+import com.example.scbook.responses.OrderListResponse;
 import com.example.scbook.responses.OrderResponse;
 import com.example.scbook.services.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -70,5 +76,31 @@ public class OrderController {
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok("DELETED SUCCESSFULLY");
+    }
+    @GetMapping("/get-orders-by-keyword")
+    public ResponseEntity<OrderListResponse> getOrdersByKeyword(
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                Sort.by("id").ascending());
+
+        Page<OrderResponse> orderPage = orderService.getOrdersByKeyword(keyword, pageRequest)
+                .map(OrderResponse::fromOrder);
+        int totalPages = orderPage.getTotalPages();
+        List<OrderResponse> orderResponses = orderPage.getContent();
+
+    return ResponseEntity.ok(OrderListResponse.builder()
+                    .orders(orderResponses)
+                    .totalPages(totalPages)
+            .build());
     }
 }
