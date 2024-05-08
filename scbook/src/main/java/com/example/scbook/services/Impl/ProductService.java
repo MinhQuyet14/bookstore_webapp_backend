@@ -23,16 +23,16 @@ public class ProductService implements IProductService {
 
     @Override
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
-        Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(
-                        ()-> new DataNotFoundException(
-                                "Cannot find category with id: "+ productDTO.getCategoryId()));
+//        Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
+//                .orElseThrow(
+//                        ()-> new DataNotFoundException(
+//                                "Cannot find category with id: "+ productDTO.getCategoryId()));
 
         Product newProduct = Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
                 .url(productDTO.getUrl())
-                .category(existingCategory)
+                //.category(existingCategory)
                 .author(productDTO.getAuthor())
                 .build();
         return productRepository.save(newProduct);
@@ -56,12 +56,12 @@ public class ProductService implements IProductService {
         Product existingProduct = getProductById(id);
         if(existingProduct != null){
             existingProduct.setName(productDTO.getName());
-            Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
-                    .orElseThrow(
-                            ()-> new DataNotFoundException(
-                                    "Cannot find category with id: "+ productDTO.getCategoryId()));
-
-            existingProduct.setCategory(existingCategory);
+//            Category existingCategory = categoryRepository.findById(productDTO.getCategoryId())
+//                    .orElseThrow(
+//                            ()-> new DataNotFoundException(
+//                                    "Cannot find category with id: "+ productDTO.getCategoryId()));
+//
+//            existingProduct.setCategory(existingCategory);
             existingProduct.setAuthor(productDTO.getAuthor());
             existingProduct.setPrice(productDTO.getPrice());
             existingProduct.setDescription(productDTO.getDescription());

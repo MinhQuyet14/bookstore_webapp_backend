@@ -37,6 +37,7 @@ public class OrderDTO {
     private String paymentMethod;
     @JsonProperty("shipping_date")
     private LocalDate shippingDate;
+    private String status;
     @JsonProperty("cart_items")
     private List<CartItemDTO> cartItems;
 }

@@ -13,7 +13,7 @@ public class ProductDTO {
     private Float price;
     private String url;
     private String description;
-    @JsonProperty("category_id")
-    private Long categoryId;
+//    @JsonProperty("category_id")
+//    private Long categoryId;
     private String author;
 }

@@ -75,6 +75,16 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+        try{
+            Product product = productService.updateProduct(id, productDTO);
+            return ResponseEntity.ok(ProductResponse.fromProduct(product));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Chiu chet khong update duoc: "+ e.getMessage());
+        }
+    }
+
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createProduct(
             @Valid @RequestBody ProductDTO productDTO,
