@@ -68,7 +68,7 @@ public class ProductService implements IProductService {
             existingProduct.setUrl(productDTO.getUrl());
             productRepository.save(existingProduct);
         }
-        return null;
+        return existingProduct;
     }
 
     @Override
