@@ -4,6 +4,9 @@ import com.example.scbook.dtos.ProductDTO;
 import com.example.scbook.exceptions.DataNotFoundException;
 import com.example.scbook.models.Product;
 import com.example.scbook.responses.ProductResponse;
+import com.example.scbook.responses.ProductsSoldResponse;
+import com.example.scbook.responses.SoldProductListResponse;
+import com.example.scbook.responses.SoldProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -17,4 +20,6 @@ public interface IProductService {
     void deleteProduct(Long id);
     boolean existsByName(String name);
     List<Product> findProductsByIds(List<Long> productIds);
+    Page<ProductResponse> getSoldProducts(String keyword, Long categoryId, PageRequest pageRequest);
+    List<Product> getTopSoldProducts();
 }

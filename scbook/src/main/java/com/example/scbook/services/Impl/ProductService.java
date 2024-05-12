@@ -3,16 +3,19 @@ package com.example.scbook.services.Impl;
 import com.example.scbook.dtos.ProductDTO;
 import com.example.scbook.exceptions.DataNotFoundException;
 import com.example.scbook.models.Product;
-import com.example.scbook.models.Category;
 import com.example.scbook.repositories.ProductRepository;
 import com.example.scbook.repositories.CategoryRepository;
 import com.example.scbook.responses.ProductResponse;
+import com.example.scbook.responses.ProductsSoldResponse;
+import com.example.scbook.responses.SoldProductListResponse;
+import com.example.scbook.responses.SoldProductResponse;
 import com.example.scbook.services.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +36,7 @@ public class ProductService implements IProductService {
                 .price(productDTO.getPrice())
                 .url(productDTO.getUrl())
                 //.category(existingCategory)
+                .unitsInStock(productDTO.getUnitsInStock())
                 .author(productDTO.getAuthor())
                 .build();
         return productRepository.save(newProduct);
@@ -62,6 +66,7 @@ public class ProductService implements IProductService {
 //                                    "Cannot find category with id: "+ productDTO.getCategoryId()));
 //
 //            existingProduct.setCategory(existingCategory);
+            existingProduct.setUnitsInStock(productDTO.getUnitsInStock());
             existingProduct.setAuthor(productDTO.getAuthor());
             existingProduct.setPrice(productDTO.getPrice());
             existingProduct.setDescription(productDTO.getDescription());
@@ -84,6 +89,18 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productRepository.findProductsByIds(productIds);
+    }
+
+    @Override
+    public Page<ProductResponse> getSoldProducts(String keyword, Long categoryId, PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.getAllSoldProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
+    }
+
+    @Override
+    public List<Product> getTopSoldProducts() {
+        return productRepository.getTopSoldProducts();
     }
 
 }

@@ -2,8 +2,7 @@ package com.example.scbook.controllers;
 
 import com.example.scbook.dtos.ProductDTO;
 import com.example.scbook.models.Product;
-import com.example.scbook.responses.ProductListResponse;
-import com.example.scbook.responses.ProductResponse;
+import com.example.scbook.responses.*;
 import com.example.scbook.services.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +54,22 @@ public class ProductController {
                 .products(products)
                 .totalPages(totalPages)
                 .build());
+    }
+    @GetMapping("/sold-products")
+    public ResponseEntity<ProductListResponse> getAllSoldProducts(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int limit
+    ){
+        PageRequest pageRequest = PageRequest.of(page, limit
+                ,Sort.by("sold").descending());
+
+        Page<ProductResponse> productPage= productService.getSoldProducts(keyword, categoryId, pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> products = productPage.getContent();
+
+        return ResponseEntity.ok(ProductListResponse.builder().products(products).totalPages(totalPages).build());
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long productId){
@@ -150,6 +165,12 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @GetMapping("/top-sold-products")
+    public ResponseEntity<?> getTopSoldProducts(){
+        return ResponseEntity.ok(productService.getTopSoldProducts());
+    }
+
+
     public String storeFile(MultipartFile file) throws IOException{
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String uniqueFileName = UUID.randomUUID().toString() + "_" + filename;

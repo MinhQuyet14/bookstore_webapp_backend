@@ -59,11 +59,13 @@ public class OrderService implements IOrderService {
 
             Product product = productRepository.findById(productId)
                     .orElseThrow(()-> new DataNotFoundException("Product not found with id: " + productId));
-
+            product.setUnitsInStock(product.getUnitsInStock() - quantity);
+            product.setSold(product.getSold() + quantity);
             orderDetail.setProduct(product);
             orderDetail.setNumberOfProducts(quantity);
             orderDetail.setPrice(product.getPrice());
             orderDetails.add(orderDetail);
+
         }
         orderDetailRepository.saveAll(orderDetails);
         return order;
@@ -108,4 +110,10 @@ public class OrderService implements IOrderService {
     public Page<Order> getOrdersByKeyword(String keyword, Pageable pageable){
         return orderRepository.findByKeyword(keyword, pageable);
     }
+
+    @Override
+    public Float totalRevenue() {
+        return orderRepository.totalRevenue();
+    }
+
 }

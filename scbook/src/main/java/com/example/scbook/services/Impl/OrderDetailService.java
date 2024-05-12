@@ -27,6 +27,9 @@ public class OrderDetailService implements IOrderDetailService {
                 .orElseThrow(()-> new DataNotFoundException("Cannot find order with orderId: " + orderDetailDTO.getOrderId()));
         Product product = productRepository.findById(orderDetailDTO.getProductId())
                 .orElseThrow(()-> new DataNotFoundException("Cannot find order with productId: " + orderDetailDTO.getProductId()));
+        product.setSold(product.getSold() + orderDetailDTO.getNumberOfProduct());
+        product.setUnitsInStock(product.getUnitsInStock() - orderDetailDTO.getNumberOfProduct());
+        productRepository.save(product);
         OrderDetail orderDetail = OrderDetail.builder()
                 .order(order)
                 .product(product)
@@ -52,15 +55,18 @@ public class OrderDetailService implements IOrderDetailService {
                 .orElseThrow(
                         ()->new DataNotFoundException("Cannot find order detail with orderId: " + orderDetailDTO.getOrderId())
                 );
-        Product existingproduct = productRepository.findById(orderDetailDTO.getProductId())
+        Product existingProduct = productRepository.findById(orderDetailDTO.getProductId())
                 .orElseThrow(
                         ()-> new DataNotFoundException("Cannot find order detail with productId: " + orderDetailDTO.getProductId())
                 );
         existingOrderDetail.setPrice(orderDetailDTO.getPrice());
         existingOrderDetail.setTotalMoney(orderDetailDTO.getTotalMoney());
         existingOrderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProduct());
+        existingProduct.setUnitsInStock(existingProduct.getUnitsInStock() - orderDetailDTO.getNumberOfProduct());
+        existingProduct.setSold(existingProduct.getSold() + orderDetailDTO.getNumberOfProduct());
+        productRepository.save(existingProduct);
         existingOrderDetail.setOrder(existingOrder);
-        existingOrderDetail.setProduct(existingproduct);
+        existingOrderDetail.setProduct(existingProduct);
         return orderDetailRepository.save(existingOrderDetail);
     }
     @Override

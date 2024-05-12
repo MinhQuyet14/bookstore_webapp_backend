@@ -103,4 +103,9 @@ public class OrderController {
                     .totalPages(totalPages)
             .build());
     }
+
+    @GetMapping("/total-revenue")
+    public Float getTotalRevenue(){
+        return orderService.totalRevenue();
+    }
 }

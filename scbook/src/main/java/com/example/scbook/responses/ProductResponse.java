@@ -18,9 +18,12 @@ public class ProductResponse {
     private Float price;
     private String url;
     private String description;
+    @JsonProperty("units_in_stock")
+    private Integer unitsInStock;
     @JsonProperty("category_id")
     private Long categoryId;
     private String author;
+    private Integer sold;
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
     @JsonProperty("updated_at")
@@ -32,10 +35,12 @@ public class ProductResponse {
                 .name(product.getName())
                 .price(product.getPrice())
                 .url(product.getUrl())
+                .unitsInStock(product.getUnitsInStock())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .description(product.getDescription())
                 .author(product.getAuthor())
+                .sold(product.getSold())
                 .categoryId(product.getCategory().getId())
                 .build();
     }
