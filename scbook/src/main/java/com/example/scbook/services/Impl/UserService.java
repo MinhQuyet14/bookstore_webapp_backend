@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -119,6 +120,12 @@ public class UserService implements IUserService {
         }
         return userRepository.save(existingUser);
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
     @Override
     public User getUserDetailsFromToken(String token) throws Exception {
         if(jwtTokenUtil.isTokenExpired(token)) {

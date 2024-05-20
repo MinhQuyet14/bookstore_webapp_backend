@@ -36,16 +36,17 @@ public class WebSecurityConfig {
                         //users---------------------------------------------------------------------------
                         .requestMatchers("**").permitAll()
                         .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/users**").permitAll()
                         //roles---------------------------------------------------------------------------
                         .requestMatchers(HttpMethod.GET, "/api/v1/roles**").permitAll()
                         //categories----------------------------------------------------------------------
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories**")
                                 .hasAnyRole(Role.USER, Role.ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/categories?**")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/categories/**")
                                 .hasAnyRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories?**")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**")
                                 .hasAnyRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categories?**")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**")
                                 .hasAnyRole(Role.ADMIN)
                         //products-------------------------------------------------------------------------
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**")
