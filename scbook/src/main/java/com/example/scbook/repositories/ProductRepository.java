@@ -1,11 +1,7 @@
 package com.example.scbook.repositories;
 
 import com.example.scbook.models.Product;
-import com.example.scbook.responses.ProductsSoldResponse;
-import com.example.scbook.responses.SoldProductListResponse;
-import com.example.scbook.responses.SoldProductResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,6 +1,5 @@
 package com.example.scbook.configurations;
 
-import com.example.scbook.models.User;
 import com.example.scbook.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

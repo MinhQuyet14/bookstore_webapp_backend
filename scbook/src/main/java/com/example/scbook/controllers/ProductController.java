@@ -96,7 +96,7 @@ public class ProductController {
             Product product = productService.updateProduct(id, productDTO);
             return ResponseEntity.ok(ProductResponse.fromProduct(product));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Chiu chet khong update duoc: "+ e.getMessage());
+            return ResponseEntity.badRequest().body("Updated error: "+ e.getMessage());
         }
     }
 

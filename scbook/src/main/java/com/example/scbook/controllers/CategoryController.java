@@ -4,7 +4,6 @@ import com.example.scbook.dtos.CategoryDTO;
 import com.example.scbook.models.Category;
 import com.example.scbook.services.Impl.CategoryService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

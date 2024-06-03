@@ -27,10 +27,9 @@ public class JwtTokenUtil {
     private int expiration; //save to an environment variable
     @Value("${jwt.secretKey}")
     private String secretKey;
-    public String generateToken(User user) throws Exception {
+    public String generateToken(User user) {
         //properties -> claims
         Map<String, Object> claims = new HashMap<>();
-        //this.generateSecretKey();
         claims.put("phoneNumber", user.getPhoneNumber());
         try {
             return Jwts.builder()
@@ -39,11 +38,10 @@ public class JwtTokenUtil {
                     .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
-            //return token;
         } catch (Exception e) {
             //use Logger instead of printLn for future
             throw new InvalidParameterException("Cannot create jwt, error: " + e.getMessage());
-            //System.err.println("Cannot create jwt, error: " + e.getMessage());
+
         }
     }
     private Key getSignInKey() {

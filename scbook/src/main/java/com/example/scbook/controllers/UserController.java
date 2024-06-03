@@ -9,10 +9,10 @@ import com.example.scbook.responses.RegisterResponse;
 import com.example.scbook.responses.UserResponse;
 import com.example.scbook.services.IUserService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -41,17 +41,17 @@ public class UserController {
                         .map(FieldError::getDefaultMessage)
                         .toList();
                 return ResponseEntity.badRequest().body(RegisterResponse.builder()
-                                .message("Dang ky khong thanh cong")
+                                .message("Register not completed, " + errorMessages)
                         .build());
             }
             if (!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body(RegisterResponse.builder()
-                                .message("Mat khau khong trung khop")
+                                .message("Password miss match")
                         .build());
             }
             User user = userService.createUser(userDTO);
             return ResponseEntity.ok(RegisterResponse.builder()
-                            .message("Dang ky thanh cong!!!")
+                            .message("Register successfully!!!")
                             .user(user)
                     .build());
         } catch(Exception e) {
@@ -70,7 +70,7 @@ public class UserController {
             );
 
             return ResponseEntity.ok(LoginResponse.builder()
-                            .message("Dang nhap thanh cong!!!")
+                            .message("Login successfully!!!")
                             .token(token)
                     .build());
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class UserController {
     @PostMapping("/details")
     public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         try{
-            String extractedToken = authorizationHeader.substring(7); //Loai bo "Bearer " tu token
+            String extractedToken = authorizationHeader.substring(7);
             User user = userService.getUserDetailsFromToken(extractedToken);
             return ResponseEntity.ok(UserResponse.fromUser(user));
         } catch (Exception e) {
@@ -96,7 +96,7 @@ public class UserController {
             @RequestHeader("Authorization") String authorizationHeader
     ) {
         try{
-            String extractedToken = authorizationHeader.substring(7); //Loai bo "Bearer " tu token
+            String extractedToken = authorizationHeader.substring(7);
             User user = userService.getUserDetailsFromToken(extractedToken);
             if(!user.getId().equals(userId)){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

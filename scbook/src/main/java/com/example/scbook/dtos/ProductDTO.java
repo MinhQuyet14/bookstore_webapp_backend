@@ -16,7 +16,9 @@ public class ProductDTO {
     @JsonProperty("units_in_stock")
     private Integer unitsInStock;
     private Integer sold;
-//    @JsonProperty("category_id")
-//    private Long categoryId;
+/*    @JsonProperty("category_id")
+    private Long categoryId;
+
+ */
     private String author;
 }
